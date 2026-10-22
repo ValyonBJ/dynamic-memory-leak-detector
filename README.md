@@ -267,14 +267,15 @@ dmld fits a linear regression to each stack's live bytes over a sliding window:
 |---|---|
 | **Rust stable** | Builds the user-space daemon.[^aya-dev] |
 | **Rust nightly + `rust-src`** | eBPF programs target `bpfel-unknown-none`, which has no prebuilt standard library. `core` has to be rebuilt from source, and that requires a nightly toolchain.[^aya-dev] |
-| **[`bpf-linker`](https://github.com/aya-rs/bpf-linker)** | Links the Rust eBPF object files into loadable BPF bytecode.[^aya-dev] |
+| **[`bpf-linker`](https://github.com/aya-rs/bpf-linker)** | Links the Rust eBPF object files into loadable BPF bytecode.[^aya-dev] Install the prebuilt binary with `cargo-binstall`. A plain `cargo install bpf-linker` builds it from source and needs a matching system LLVM, which the project does not recommend.[^bpf-linker] |
 | **`x86_64-unknown-linux-musl` target** | Produces a fully static binary, so nothing needs to be installed on the target. |
 | **A Linux host or VM** (≥ 5.8) | eBPF programs only load into a Linux kernel. Integration tests need root on such a host. |
 
 ```bash
 rustup toolchain install stable
 rustup toolchain install nightly --component rust-src
-cargo install bpf-linker
+cargo install cargo-binstall
+cargo binstall bpf-linker
 rustup target add x86_64-unknown-linux-musl
 ```
 
@@ -384,6 +385,7 @@ Overhead benchmarks on the programs in [`examples/`](examples/) will be publishe
 
 ### Phase 1: eBPF proof of concept
 - [ ] `aya` workspace (eBPF + daemon + shared types)
+- [x] Declare licenses in each `Cargo.toml` (`MIT OR Apache-2.0` for user space, `MIT OR GPL-2.0` for `dmld-ebpf`)
 - [ ] Uprobes/uretprobes on `malloc` and `free` for a given PID
 - [ ] Raw counters (allocations, frees, live bytes) printed to the console
 - [ ] Ignore `free` calls on unknown addresses (allocations made before attaching)
@@ -414,22 +416,13 @@ Overhead benchmarks on the programs in [`examples/`](examples/) will be publishe
 
 ## Contributing
 
-Before opening a pull request:
-
-```bash
-cargo fmt --all
-cargo clippy --all-targets -- -D warnings
-cargo test
-sudo -E cargo test --test integration   # needs eBPF privileges
-```
-
-Please include the kernel version and distribution you tested on.
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks to run before a pull request, the license of contributions and the sign-off (DCO) every commit needs.
 
 ## License
 
-User-space code is dual-licensed under **MIT** or **Apache-2.0**, at your option.
+User-space code is licensed under **MIT** ([LICENSE-MIT](LICENSE-MIT)) or **Apache-2.0** ([LICENSE-APACHE](LICENSE-APACHE)), at your option.
 
-The eBPF programs (`dmld-ebpf`) are licensed under **GPL-2.0** (dual MIT/GPL-2.0). The kernel lets a BPF program call "GPL only" helper functions only if the program declares a GPL-compatible license.[^bpf-license]
+The eBPF programs (`dmld-ebpf`) are licensed under **MIT** ([LICENSE-MIT](LICENSE-MIT)) or **GPL-2.0** ([LICENSE-GPL2](LICENSE-GPL2)), at your option. They declare the license string `Dual MIT/GPL`, which the kernel accepts as GPL-compatible. The kernel lets a BPF program call "GPL only" helper functions only if the program declares a GPL-compatible license.[^bpf-license]
 
 ## References
 
@@ -448,6 +441,7 @@ The eBPF programs (`dmld-ebpf`) are licensed under **GPL-2.0** (dual MIT/GPL-2.0
 [^memleak-man]: BCC `memleak(8)` man page: OVERHEAD section and `-o OLDER` option. <https://mankier.com/8/bcc-memleak>
 [^blazesym]: `blazesym`: address symbolization library (ELF, DWARF, Gsym…). <https://github.com/libbpf/blazesym>
 [^aya-dev]: Aya book, *Development Environment*. <https://aya-rs.dev/book/start/development/>
+[^bpf-linker]: `bpf-linker` README, *Installation*: "Building from source, including even a plain `cargo install bpf-linker` invocation, is **not** recommended for regular users". <https://github.com/aya-rs/bpf-linker#installation>
 [^bpf-license]: Linux kernel documentation, *BPF licensing*. <https://docs.kernel.org/bpf/bpf_licensing.html>
 [^uprobetracer]: Linux kernel documentation, *Uprobe-tracer: Uprobe-based Event Tracing*. <https://docs.kernel.org/trace/uprobetracer.html>
 [^proc-maps]: `proc_pid_maps(5)` man page. <https://man7.org/linux/man-pages/man5/proc_pid_maps.5.html>
