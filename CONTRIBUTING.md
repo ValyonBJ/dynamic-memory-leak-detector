@@ -1,5 +1,7 @@
 # Contributing to dmld
 
+Everyone taking part in the project is expected to follow the [Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## Before opening a pull request
 
 ```bash

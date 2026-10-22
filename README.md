@@ -418,6 +418,8 @@ Overhead benchmarks on the programs in [`examples/`](examples/) will be publishe
 
 Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for the checks to run before a pull request, the license of contributions and the sign-off (DCO) every commit needs.
 
+This project follows the [Contributor Covenant Code of Conduct](CODE_OF_CONDUCT.md).
+
 ## License
 
 User-space code is licensed under **MIT** ([LICENSE-MIT](LICENSE-MIT)) or **Apache-2.0** ([LICENSE-APACHE](LICENSE-APACHE)), at your option.
